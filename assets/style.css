@@ -1,0 +1,16 @@
+.h1 {
+    font-size: 40px;
+}
+.weatherJumboTron {
+    height: 22em;
+}
+.days {
+    width: 185px; 
+    background-color: rgb(48, 85, 250);
+    color: white;
+}
+.input-group {
+    width: 400px;
+    display:flex;
+    flex-direction:row;
+}
