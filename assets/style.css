@@ -5,12 +5,42 @@
     height: 22em;
 }
 .days {
-    width: 185px; 
+    width: 240px; 
+    height: 220px;
     background-color: rgb(48, 85, 250);
     color: white;
+    margin: 20px;
+    display: flex;
+    flex: space-between;
+    margin-left: 120px;
+}
+#weatherIcon1 {
+    width: 100px;
+}
+#weatherIcon2 {
+    width: 100px;
+}
+#weatherIcon3 {
+    width: 100px;
+}
+#weatherIcon4 {
+    width: 100px;
+}
+#weatherIcon5 {
+    width: 100px;
 }
 .input-group {
     width: 400px;
     display:flex;
     flex-direction:row;
+}
+.rightSideOfPage {
+    display: none;
+}
+#fiveDay {
+    margin-left: 140px;
+}
+#btn-search {
+    background-color:rgb(49, 49, 231);
+    color: white;
 }

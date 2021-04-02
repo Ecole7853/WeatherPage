@@ -1,13 +1,17 @@
 var apiKey = "f0646b580390d9e017c02504b4ede918"  
+var listOfSearches;
+if (JSON.parse(localStorage.getItem("CityName"))!==null){
+    listOfSearches = JSON.parse(localStorage.getItem("CityName"));
+}
+else {listOfSearches = [];}
+console.log(listOfSearches)
 
 function getUvIndex(lat, lon){
     var getUvIndex = "https://api.openweathermap.org/data/2.5/onecall?lat=" + lat + "&lon=" + lon + "&appid=" + apiKey;
     fetch(getUvIndex).then(function (response){
         return response.json()
     }).then(function (data){
-        //$("#uvIndex").text("UV Index: " + data.current.uvi);
         $("#uvIndex").html("UV Index: <span class='bg-danger border rounded text-white'>" + data.current.uvi + "</span>");
-        //$("#uvIndex").addClass("uvRed")
     })
 }
 
@@ -33,53 +37,65 @@ function fiveDayForeCast(city){
     fetch(getFiveDayForeCastApi).then(function (response){
         return response.json()
     }).then(function (data){
-        // var iconcode = data.weather[0].icon; // needs work
-        // var iconurl = "http://openweathermap.org/img/w/" + iconcode + ".png"; //needs work
         $(".weekday1Date").text(moment(data.list[5].dt_txt).format("l"))
-        $(".weekday1Temp").text("Temperature: " + data.list[1].main.temp); 
-        $(".weekday1Humidity").text("Humidity: " + data.list[1].main.humidity+"%");
-        // $("#weatherIcon1").attr('src', iconurl); // needs work
+        $(".weekday1Temp").text("Temperature: " + data.list[5].main.temp); 
+        $(".weekday1Humidity").text("Humidity: " + data.list[5].main.humidity+"%");
+        $("#weatherIcon1").attr('src',  "http://openweathermap.org/img/w/" + data.list[5].weather[0].icon + ".png"); 
         $(".weekday2Date").text(moment(data.list[13].dt_txt).format("l"))
-        $(".weekday2Temp").text("Temperature: " + data.list[2].main.temp); 
-        $(".weekday2Humidity").text("Humidity: " + data.list[2].main.humidity+"%"); 
-        // $("#weatherIcon2").attr('src', iconurl); // needs work 
+        $(".weekday2Temp").text("Temperature: " + data.list[13].main.temp); 
+        $(".weekday2Humidity").text("Humidity: " + data.list[13].main.humidity+"%"); 
+        $("#weatherIcon2").attr('src', "http://openweathermap.org/img/w/" + data.list[13].weather[0].icon + ".png"); 
         $(".weekday3Date").text(moment(data.list[21].dt_txt).format("l"))
-        $(".weekday3Temp").text("Temperature: " + data.list[3].main.temp); 
-        $(".weekday3Humidity").text("Humidity: " + data.list[3].main.humidity+"%"); 
-        // $("#weatherIcon3").attr('src', iconurl); // needs work
+        $(".weekday3Temp").text("Temperature: " + data.list[21].main.temp); 
+        $(".weekday3Humidity").text("Humidity: " + data.list[21].main.humidity+"%"); 
+        $("#weatherIcon3").attr('src', "http://openweathermap.org/img/w/" + data.list[21].weather[0].icon + ".png"); 
         $(".weekday4Date").text(moment(data.list[29].dt_txt).format("l"))
-        $(".weekday4Temp").text("Temperature: " + data.list[4].main.temp); 
-        $(".weekday4Humidity").text("Humidity: " + data.list[4].main.humidity+"%"); 
-        // $("#weatherIcon4").attr('src', iconurl); // needs work
+        $(".weekday4Temp").text("Temperature: " + data.list[29].main.temp); 
+        $(".weekday4Humidity").text("Humidity: " + data.list[29].main.humidity+"%"); 
+        $("#weatherIcon4").attr('src', "http://openweathermap.org/img/w/" + data.list[29].weather[0].icon + ".png"); 
         $(".weekday5Date").text(moment(data.list[37].dt_txt).format("l"))
-        $(".weekday5Temp").text("Temperature: " + data.list[5].main.temp); 
-        $(".weekday5Humidity").text("Humidity: " + data.list[5].main.humidity+"%");
-        // $("#weatherIcon5").attr('src', iconurl); // needs work
+        $(".weekday5Temp").text("Temperature: " + data.list[37].main.temp); 
+        $(".weekday5Humidity").text("Humidity: " + data.list[37].main.humidity+"%");
+        $("#weatherIcon5").attr('src', "http://openweathermap.org/img/w/" + data.list[37].weather[0].icon + ".png");
+
 })
 }
 
-// function startUp() {
-//     $('#text-9').text(localStorage.getItem("9"))
-//     $('#text-10').text(localStorage.getItem("10"))
-//     $('#text-11').text(localStorage.getItem("11"))
-//     $('#text-12').text(localStorage.getItem("12"))
-//     $('#text-13').text(localStorage.getItem("13"))
-//     $('#text-14').text(localStorage.getItem("14"))
-//     $('#text-15').text(localStorage.getItem("15"))
-//     $('#text-16').text(localStorage.getItem("16"))
-//     $('#text-17').text(localStorage.getItem("17"))
+function startUp() {
+    console.log(listOfSearches)
+    for (let i = 0; i<listOfSearches.length; i++){
+        var button = $("<button></button>");
+        button.text(listOfSearches[i]);
+        button.attr("id", listOfSearches[i])
+        button.on('click', function(event){
+            $(".rightSideOfPage").css("display","block");
+            event.preventDefault();
+            weather(event.target.innerHTML);
+            fiveDayForeCast(event.target.innerHTML);
+        })
+        $(".cityTabs").append(button);
+    }
+    
 
-// $('.saveBtn').on('click', function() {
-//     var value = $(this).siblings(".description").val();
-//     var time = $(this).parent().attr("id").split("hour-")[1];
-//     localStorage.setItem(time, value);
-//     $("#saved").text("💾Entry saved💾").show(1).delay(500).hide(1);
-
-$(document).ready(function(){
+}
+// $(document).ready(function(){
 $("#btn-search").on('click', function(event){
     event.preventDefault();
+    $(".rightSideOfPage").css("display","block");
     var city = $("#searchBtn").val();
-    weather(city)
-    fiveDayForeCast(city)
+    listOfSearches.push(city);
+    localStorage.setItem("CityName", JSON.stringify(listOfSearches));
+    var button = $("<button></button>");
+        button.text(city);
+        button.attr("id", city)
+        button.on('click', function(event){
+            event.preventDefault();
+            weather(event.target.innerHTML);
+            fiveDayForeCast(event.target.innerHTML);
+        })
+        $(".cityTabs").append(button);
+    weather(city);
+    fiveDayForeCast(city);
 })
-})
+// })
+startUp();
